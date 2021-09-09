@@ -6,10 +6,10 @@ const postsRoutes = require("./routes/posts");
 
 const app = express();
 
+const DB_URL = process.env.MEAN_DB_URL;
+
 mongoose
-  .connect(
-    "mongodb+srv://ndbagal:N4E4ReIP0RNSpMin@cluster0.pufgj.mongodb.net/node-angular?retryWrites=true&w=majority"
-  )
+  .connect(DB_URL)
   .then(() => {
     console.log("Connected to database!");
   })
