@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -6,19 +7,20 @@ const postsRoutes = require("./routes/posts");
 
 const app = express();
 
-const DB_URL = process.env.MEAN_DB_URL;
-
 mongoose
-  .connect(DB_URL)
+  .connect(process.env.MEAN_DB_URL)
   .then(() => {
     console.log("Connected to database!");
   })
   .catch(() => {
-    console.log("Connection failed!");
+    console.log(
+      "Connection failed! Please make sure that environment variable MEAN_DB_URL is set properly."
+    );
   });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/images", express.static(path.join("backend/images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
