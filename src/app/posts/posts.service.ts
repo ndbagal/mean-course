@@ -72,14 +72,10 @@ export class PostsService {
     postData.append('title', title);
     postData.append('content', content);
     postData.append('image', image, title);
-    this.http
-      .post<{ message: string; post: Post }>(
-        'http://localhost:3000/api/posts',
-        postData
-      )
-      .subscribe((responseData) => {
-        this.route.navigate(['/']);
-      });
+    return this.http.post<{ message: string; post: Post }>(
+      'http://localhost:3000/api/posts',
+      postData
+    );
   }
 
   updatePost(id: string, title: string, content: string, image: File | string) {
@@ -100,14 +96,10 @@ export class PostsService {
       };
     }
 
-    this.http
-      .put<{ message: string; post: Post }>(
-        'http://localhost:3000/api/posts/' + id,
-        postData
-      )
-      .subscribe((response) => {
-        this.route.navigate(['/']);
-      });
+    return this.http.put<{ message: string; post: Post }>(
+      'http://localhost:3000/api/posts/' + id,
+      postData
+    );
   }
 
   deletePost(postId: string) {

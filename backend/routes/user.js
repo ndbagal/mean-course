@@ -21,8 +21,12 @@ router.post("/signup", (req, res, next) => {
         });
       })
       .catch((err) => {
+        let errorMessage = "Invalid authentication credentials!";
+        if (err.code === 11000) {
+          errorMessage = "Email is already in use!";
+        }
         res.status(500).json({
-          error: err,
+          message: errorMessage,
         });
       });
   });
@@ -34,7 +38,7 @@ router.post("/login", (req, res, next) => {
     .then((fetchedUser) => {
       if (!fetchedUser) {
         return res.status(401).json({
-          message: "Auth failed!",
+          message: "You need to signup before logging in!",
         });
       }
       user = fetchedUser;
@@ -43,7 +47,7 @@ router.post("/login", (req, res, next) => {
     .then((result) => {
       if (!result) {
         return res.status(401).json({
-          message: "Auth failed!",
+          message: "Invalid authentication credentials!",
         });
       }
       const token = jwt.sign(
@@ -59,8 +63,7 @@ router.post("/login", (req, res, next) => {
     })
     .catch((err) => {
       return res.status(401).json({
-        message: "Auth failed!",
-        error: err,
+        message: "Invalid authentication credentials!",
       });
     });
 });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { mimeType } from './mime-type.validator';
@@ -22,7 +22,8 @@ export class PostCreateComponent implements OnInit {
 
   constructor(
     public postsService: PostsService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -83,18 +84,38 @@ export class PostCreateComponent implements OnInit {
     }
     this.isLoading = true;
     if (this.mode === 'create') {
-      this.postsService.addPost(
-        this.form.value.title,
-        this.form.value.content,
-        this.form.value.image
-      );
+      this.postsService
+        .addPost(
+          this.form.value.title,
+          this.form.value.content,
+          this.form.value.image
+        )
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            this.router.navigate(['/']);
+          },
+          () => {
+            this.isLoading = false;
+          }
+        );
     } else {
-      this.postsService.updatePost(
-        this.postId,
-        this.form.value.title,
-        this.form.value.content,
-        this.form.value.image
-      );
+      this.postsService
+        .updatePost(
+          this.postId,
+          this.form.value.title,
+          this.form.value.content,
+          this.form.value.image
+        )
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            this.router.navigate(['/']);
+          },
+          () => {
+            this.isLoading = false;
+          }
+        );
     }
     this.form.reset();
   }
